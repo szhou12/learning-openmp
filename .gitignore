@@ -1,0 +1,65 @@
+# === macOS system files ===
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# === CUDA compiler outputs ===
+*.o
+*.obj
+*.ptx
+*.cubin
+*.fatbin
+*.linkinfo
+*.d
+
+# === Executables ===
+*.o
+*.out
+*.exe
+*.a
+*.app
+*.so
+*.dylib
+
+# === Logs and core dumps ===
+*.log
+*.core
+core.*
+
+# === CLion / CMake ===
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+build/
+build*/         # sometimes people use build-debug, build-release
+*.cmake
+*.cbp
+
+# === VSCode ===
+.vscode/
+*.code-workspace
+
+# === Xcode ===
+*.xcuserstate
+*.xcworkspace
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+*.xcuserdata
+
+# === Python (if used for scripting or plotting) ===
+__pycache__/
+*.py[cod]
+*.ipynb_checkpoints/
+
+# === Project-specific compiled binaries ===
+blocked-matrix-multiplication
+numerical-integration
+
+# === Generated results (can be regenerated) ===
+*.csv
+*.png
+
+# === Misc ===
+*.swp
+*.swo
+*~
