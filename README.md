@@ -41,6 +41,35 @@ learning-openmp/
 
 ## 🔢 Matrix Multiplication
 
+### OpenMP Thread Decomposition Tree
+```
+Master Thread (Main Program)
+│
+├── Sequential Setup Phase
+│   ├── Matrix Initialization (a, b, c)
+│   ├── Parameter Validation (N % NEIB == 0)
+│   └── Memory Allocation
+│
+└── Parallel Execution Phase
+    │
+    └── Block Loop p (Sequential)
+        │
+        └── #pragma omp parallel for (q-loop)
+            ├── Thread 0: Processes q-blocks [0, 1, 2, ...]
+            ├── Thread 1: Processes q-blocks [0, 1, 2, ...]  
+            ├── Thread 2: Processes q-blocks [0, 1, 2, ...]
+            └── ...
+            │
+            └── Each Thread's Work:
+                └── for q = assigned_blocks
+                    └── for r = 0 to NB-1 (Sequential)
+                        └── Block Computation (NEIB×NEIB)
+                            ├── for i = p*NEIB to (p+1)*NEIB-1
+                            ├── for j = q*NEIB to (q+1)*NEIB-1  
+                            └── for k = r*NEIB to (r+1)*NEIB-1
+                                └── c[i][j] += a[i][k] * b[k][j]
+```
+
 ### Implemented Methods
 
 #### **1. Blocked Matrix Multiplication (OpenMP)**
@@ -96,6 +125,41 @@ for (int i = 0; i < N; i++)
 - 🎯 **Cache optimization matters**: Blocked method 76% faster at 8 threads
 
 ## ∫ Numerical Integration
+
+### OpenMP Thread Decomposition Tree
+```
+Master Thread (Main Program)
+│
+├── Sequential Setup Phase
+│   ├── Parameter Input (x1, x2, dx)
+│   ├── N Calculation: N = (x2 - x1) / dx
+│   └── Variable Initialization (s = 0)
+│
+└── Parallel Execution Phase
+    │
+    └── #pragma omp parallel for reduction(+: s)
+        ├── Fork: Create nThreads worker threads
+        │
+        ├── Thread 0: Loop iterations [chunk_0]
+        │   ├── for i = start_0 to end_0
+        │   │   └── s_local += sin(x1 + i * dx)
+        │   └── Partial sum: s_0
+        │
+        ├── Thread 1: Loop iterations [chunk_1]  
+        │   ├── for i = start_1 to end_1
+        │   │   └── s_local += sin(x1 + i * dx)
+        │   └── Partial sum: s_1
+        │
+        ├── Thread k: Loop iterations [chunk_k]
+        │   ├── for i = start_k to end_k
+        │   │   └── s_local += sin(x1 + i * dx)
+        │   └── Partial sum: s_k
+        │
+        └── Reduction Phase:
+            ├── Barrier: Wait for all threads
+            ├── Combine: s = s_0 + s_1 + ... + s_k
+            └── Join: Return to master thread
+```
 
 ### Implemented Methods
 
@@ -269,3 +333,8 @@ python3 integration_performance_test.py
 ---
 
 **Project demonstrates comprehensive OpenMP performance analysis with real-world insights into parallel computing trade-offs and optimization strategies.**
+
+## References
+[Parallelized Blocked Matrix Multiplication using OpenMP](https://medium.com/@cj.ptsz/parallelized-blocked-matrix-multiplication-using-openmp-97a4bc620a47)
+
+[Parallel numerical integration with OpenMP](https://kamilmysliwiec.com/parallel-numerical-integration-with-openmp)

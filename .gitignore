@@ -58,6 +58,7 @@ numerical-integration
 # === Generated results (can be regenerated) ===
 *.csv
 *.png
+*.jpg
 
 # === Misc ===
 *.swp
